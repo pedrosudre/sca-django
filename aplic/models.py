@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -15,7 +17,18 @@ class Curso(models.Model):
 
 
 class Pessoa(models.Model):
+    from stdimage.models import StdImageField
+    import uuid
+
+    def get_file_path(_instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f'{uuid.uuid4()}.{ext}'
+        return filename
+
     nome = models.CharField('Nome', max_length=100)
+    foto = StdImageField('Foto', null=True, blank=True, upload_to=get_file_path,
+                         variations={'thumb': {'width': 480, 'height': 480, 'crop': True}})
+
 
     class Meta:
         abstract = True
