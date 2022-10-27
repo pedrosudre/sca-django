@@ -20,6 +20,11 @@ class Pessoa(models.Model):
     from stdimage.models import StdImageField
     import uuid
 
+    facebook = models.CharField('Facebook', blank=True, max_length=200)
+    linkedin = models.CharField('LinkedIn', blank=True, max_length=200)
+    twitter = models.CharField('Twitter', blank=True, max_length=200)
+    instagram = models.CharField('Instagram', blank=True, max_length=200)
+
     def get_file_path(_instance, filename):
         ext = filename.split('.')[-1]
         filename = f'{uuid.uuid4()}.{ext}'

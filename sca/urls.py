@@ -5,3 +5,5 @@ urlpatterns = [
     path('restrito/', admin.site.urls),
     path('', include('aplic.urls')),
 ]
+
+

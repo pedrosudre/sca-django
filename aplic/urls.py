@@ -12,3 +12,9 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('sobre/', SobreView.as_view(), name='sobre'),
 ]
+
+
+from .views import ProfessoresView
+
+path('professores/', ProfessoresView.as_view(), name='professores'),
+
