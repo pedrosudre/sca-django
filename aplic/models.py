@@ -1,5 +1,5 @@
 import uuid
-
+from stdimage.models import StdImageField
 from django.db import models
 
 
@@ -17,9 +17,6 @@ class Curso(models.Model):
 
 
 class Pessoa(models.Model):
-    from stdimage.models import StdImageField
-    import uuid
-
     facebook = models.CharField('Facebook', blank=True, max_length=200)
     linkedin = models.CharField('LinkedIn', blank=True, max_length=200)
     twitter = models.CharField('Twitter', blank=True, max_length=200)
