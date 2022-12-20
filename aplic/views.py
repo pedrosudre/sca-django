@@ -2,15 +2,12 @@ from django.views.generic import TemplateView, ListView
 from .models import Professor
 from .models import Curso
 from .models import Disciplina
-from .models import aluno
+from .models import Aluno
 from django.db.models import Count
-from chart.views.lines import BaseLineChartView
-from django_weasyprint import WeasyTemplateView
+from chartjs.views.lines import BaseLineChartView
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-
-from weasyprint import HTML
 
 
 
@@ -68,19 +65,3 @@ class CursoDetalheView(ListView):
                 dados.append(int(linha.total))
             resultado.append(dados)
             return resultado
-
-class RelatorioAlunosView(WeasyTemplateView):
-
-    def get(self, request, *args, **kwargs):
-        alunos = Aluno.objects.order_by('nome').all()
-
-        html_string = render_to_string('relatorio-alunos.html', {'alunos': alunos})
-
-        html = HTML(string=html_string, base_url=request.build_absolute_uri())
-        html.write_pdf(target='/tmp/relatorio-alunos.pdf')
-        fs = FileSystemStorage('/tmp')
-
-        with fs.open('relatorio-alunos.pdf') as pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'inline; filename="relatorio-alunos.pdf"'
-        return response
