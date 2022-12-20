@@ -48,20 +48,20 @@ class CursoDetalheView(ListView):
         id = self.kwargs['id']
         return Disciplina.objects.filter(curso_id=id)
 
-    class DadosGraficoAlunosView(BaseLineChartView):
-    
-        def get_labels(self):
-            labels = []
-            queryset = Curso.objects.order_by('id')
-            for curso in queryset:
-                labels.append(curso.nome)
-            return labels
+class DadosGraficoAlunosView(BaseLineChartView):
 
-        def get_data(self):
-            resultado = []
-            dados = []
-            queryset = Curso.objects.order_by('id').annotate(total=Count('aluno'))
-            for linha in queryset:
-                dados.append(int(linha.total))
-            resultado.append(dados)
-            return resultado
+    def get_labels(self):
+        labels = []
+        queryset = Curso.objects.order_by('id')
+        for curso in queryset:
+            labels.append(curso.nome)
+        return labels
+
+    def get_data(self):
+        resultado = []
+        dados = []
+        queryset = Curso.objects.order_by('id').annotate(total=Count('aluno'))
+        for linha in queryset:
+            dados.append(int(linha.total))
+        resultado.append(dados)
+        return resultado
