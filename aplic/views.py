@@ -1,6 +1,8 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from .models import Professor
-from.models import Curso
+from .models import Curso
+from .models import Disciplina
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -13,7 +15,6 @@ class IndexView(TemplateView):
 class SobreView(TemplateView):
     template_name = 'about-us.html'
 
-from .models import Professor
 
 class ProfessoresView(TemplateView):
     template_name = 'teachers.html'
@@ -22,3 +23,20 @@ class ProfessoresView(TemplateView):
         context = super(ProfessoresView, self).get_context_data(**kwargs)
         context['professores'] = Professor.objects.order_by('nome').all()
         return context
+
+
+class CursoDetalheView(ListView):
+    template_name = 'course-detail.html'
+    paginate_by = 5
+    ordering = 'nome'
+    model = Disciplina
+
+    def get_context_data(self, **kwargs):
+        context = super(CursoDetalheView, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id')
+        context['curso'] = Curso.objects.filter(id=id).first
+        return context
+
+    def get_queryset(self, **kwargs):
+        id = self.kwargs['id']
+        return Disciplina.objects.filter(curso_id=id)
