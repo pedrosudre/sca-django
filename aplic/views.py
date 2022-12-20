@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, FormView
 from .models import Professor
 from .models import Curso
 from .models import Disciplina
@@ -8,7 +8,11 @@ from chartjs.views.lines import BaseLineChartView
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-
+from .forms import ContatoForm
+from django.contrib import messages
+from django.utils.translation import gettext as _
+from django.utils import translation
+from django.urls import reverse_lazy
 
 
 class IndexView(TemplateView):
@@ -65,3 +69,21 @@ class DadosGraficoAlunosView(BaseLineChartView):
             dados.append(int(linha.total))
         resultado.append(dados)
         return resultado
+
+class ContatoView(FormView):
+    template_name = 'contato.html'
+    form_class = ContatoForm
+    success_url = reverse_lazy('contato')
+
+    def get_context_data(self, **kwargs):
+        context = super(ContatoView, self).get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form, *args, **kwargs):
+        form.send_mail()
+        messages.success(self.request, _('E-mail enviado com sucesso'), extra_tags='success')
+        return super(ContatoView, self).form_valid(form, *args, **kwargs)
+
+    def form_invalid(self, form, *args, **kwargs):
+        messages.error(self.request, _('Falha ao enviar e-mail'), extra_tags='danger')
+        return super(ContatoView, self).form_invalid(form, *args, **kwargs)
